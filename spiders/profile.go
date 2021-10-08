@@ -54,12 +54,14 @@ func (s *StarkSpider) Start() {
 		r.Headers.Set("Connection", "keep-alive")
 		r.Headers.Set("Accept", "*/*")
 		r.Headers.Set("Origin", "")
-		// r.Headers.Set("Referer", "http://www.baidu.com")
+		r.Headers.Set("Referer", "http://vip.stock.finance.sina.com.cn/")
 		r.Headers.Set("Accept-Encoding", "gzip, deflate")
 		r.Headers.Set("Accept-Language", "zh-CN, zh;q=0.9")
 		r.Headers.Set("authority", "money.finance.sina.com.cn")
+		r.Headers.Set("authority", "money.finance.sina.com.cn")
 		r.Headers.Set("accept", "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8")
-		log.Print("Visiting", r.URL)
+		r.Headers.Set("Cookie", "UOR=www.google.com,finance.sina.com.cn,; SINAGLOBAL=101.206.250.69_1606034230.695058; U_TRS1=00000000.5f3ccf7.5fba2341.a0a53296; UM_distinctid=179ea4edb87329-0f1204ed8e9d55-1f3b6254-13c680-179ea4edb88403; __gads=ID=eb2fd0309922d2cf-2262930549c90069:T=1623133708:RT=1623133708:S=ALNI_MZAaX1lyVKcp3US2kTz_5qbQ6cJ_g; SR_SEL=1_511; Apache=175.153.169.31_1633142510.512058; ULV=1633221962423:6:2:1:175.153.169.31_1633142510.512058:1633142504369; MONEY-FINANCE-SINA-COM-CN-WEB5=; U_TRS2=000000fd.b043596a.615ec6f9.0869238b; FIN_ALL_VISITED=sh600113%2Csh601919%2Csh600905%2Csh600141%2Csh603155%2Csz000723%2Csz002756; rotatecount=2; FINA_V_S_2=sh600113,sh601919,sh600905,sh600141,sh603155,sz000723,sz002756; _s_upa=44")
+
 	})
 
 	c.OnResponse(func(resp *colly.Response) {
@@ -90,14 +92,22 @@ func (s *StarkSpider) Start() {
 
 	// 对visit的线程数做限制，visit可以同时运行多个
 	if err := c.Limit(&colly.LimitRule{
-		Parallelism: 2,
-		Delay:       5 * time.Second,
+		Parallelism: 1,
+		Delay:       15 * time.Second,
 	}); err != nil {
 		log.Error().Err(err).Msg("Limit")
 	}
 
 	c.OnError(func(response *colly.Response, err error) {
-		log.Error().Err(err).Msg(response.Ctx.Get("url"))
+		url := response.Request.URL.String()
+		status := response.StatusCode
+		if status == 456 {
+			log.Info().Msg("IP已被封禁了")
+			return
+		}
+
+		log.Error().Err(err).Msgf("get :%s", url)
+
 	})
 
 	codes, err := s.create.SearchNameCode(context.Background())
@@ -111,24 +121,23 @@ func (s *StarkSpider) Start() {
 			if codes[i].Profile == 0 {
 				proUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_ProfitStatement/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
 				if err := c.Visit(proUrl); err != nil {
-					log.Error().Err(err).Msg("Visit")
+					log.Error().Err(err).Msgf("Visit：%s", proUrl)
 				}
 			}
 			if codes[i].CashFlow == 0 {
 				cashUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_CashFlow/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
 				if err := c.Visit(cashUrl); err != nil {
-					log.Error().Err(err).Msg("Visit")
+					log.Error().Err(err).Msgf("Visit: %s", cashUrl)
 				}
 			}
 
 			if codes[i].Balance == 0 {
 				balanceUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_BalanceSheet/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
 				if err := c.Visit(balanceUrl); err != nil {
-					log.Error().Err(err).Msg("Visit")
+					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
 				}
 			}
 		}
-
 	}
 }
 
