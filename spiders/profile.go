@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -61,7 +64,6 @@ func (s *StarkSpider) Start() {
 		r.Headers.Set("authority", "money.finance.sina.com.cn")
 		r.Headers.Set("accept", "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8")
 		r.Headers.Set("Cookie", "UOR=www.google.com,finance.sina.com.cn,; SINAGLOBAL=101.206.250.69_1606034230.695058; U_TRS1=00000000.5f3ccf7.5fba2341.a0a53296; UM_distinctid=179ea4edb87329-0f1204ed8e9d55-1f3b6254-13c680-179ea4edb88403; __gads=ID=eb2fd0309922d2cf-2262930549c90069:T=1623133708:RT=1623133708:S=ALNI_MZAaX1lyVKcp3US2kTz_5qbQ6cJ_g; SR_SEL=1_511; Apache=175.153.169.31_1633142510.512058; ULV=1633221962423:6:2:1:175.153.169.31_1633142510.512058:1633142504369; MONEY-FINANCE-SINA-COM-CN-WEB5=; U_TRS2=000000fd.b043596a.615ec6f9.0869238b; FIN_ALL_VISITED=sh600113%2Csh601919%2Csh600905%2Csh600141%2Csh603155%2Csz000723%2Csz002756; rotatecount=2; FINA_V_S_2=sh600113,sh601919,sh600905,sh600141,sh603155,sz000723,sz002756; _s_upa=44")
-
 	})
 
 	c.OnResponse(func(resp *colly.Response) {
@@ -70,24 +72,30 @@ func (s *StarkSpider) Start() {
 			log.Info().Msgf("Status is not OK:%s", url)
 			return
 		}
-		// goquery直接读取resp.Body的内容
-		htmlDoc, err := goquery.NewDocumentFromReader(bytes.NewReader(resp.Body))
-		if err != nil {
-			log.Error().Err(err).Msg("error")
-			return
+
+		if strings.Contains(url, "hq.sinajs.cn/list") {
+			s.ParseStarkPrice(bytes.NewReader(resp.Body))
+		} else {
+			// goquery直接读取resp.Body的内容
+			htmlDoc, err := goquery.NewDocumentFromReader(bytes.NewReader(resp.Body))
+			if err != nil {
+				log.Error().Err(err).Msg("error")
+				return
+			}
+
+			if strings.Contains(url, "vFD_ProfitStatement") {
+				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseProfile)
+			}
+
+			if strings.Contains(url, "vFD_CashFlow") {
+				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
+			}
+
+			if strings.Contains(url, "vFD_BalanceSheet") {
+				htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
+			}
 		}
 
-		if strings.Contains(url, "vFD_ProfitStatement") {
-			htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseProfile)
-		}
-
-		if strings.Contains(url, "vFD_CashFlow") {
-			htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
-		}
-
-		if strings.Contains(url, "vFD_BalanceSheet") {
-			htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
-		}
 	})
 
 	// 对visit的线程数做限制，visit可以同时运行多个
@@ -115,7 +123,7 @@ func (s *StarkSpider) Start() {
 		log.Error().Err(err).Msg("find name and code")
 		return
 	}
-	years := []string{"2021", "2020", "2019"}
+	years := []string{"2021"}
 	for i := range codes {
 		for j := range years {
 			if codes[i].Profile == 0 {
@@ -138,7 +146,28 @@ func (s *StarkSpider) Start() {
 				}
 			}
 		}
+
+		ti := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
+		if codes[i].CrawlDate < ti.Unix() && len(codes[i].Code) > 0 && string([]rune(codes[i].Code)[:1]) != "3" {
+			if codes[i].SHSZ != "" {
+				balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=%s%s", codes[i].SHSZ, codes[i].Code)
+				if err := c.Visit(balanceUrl); err != nil {
+					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+				}
+			} else {
+				balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=sh%s", codes[i].Code)
+				if err := c.Visit(balanceUrl); err != nil {
+					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+				}
+
+				balanceUrl = fmt.Sprintf("https://hq.sinajs.cn/list=sz%s", codes[i].Code)
+				if err := c.Visit(balanceUrl); err != nil {
+					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+				}
+			}
+		}
 	}
+
 }
 
 func (s *StarkSpider) ParseProfile(i int, selection *goquery.Selection) {
@@ -182,7 +211,7 @@ func (s *StarkSpider) ParseCash(i int, selection *goquery.Selection) {
 	res := make([]string, 0)
 	name, code := "", ""
 
-	selection.Find(" tr td").Each(
+	selection.Find(" tr td ").Each(
 		func(i int, selection *goquery.Selection) {
 			t := selection.Text()
 			res = append(res, t)
@@ -256,7 +285,7 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 	per := Period(res)
 	date := ReportDate(res)
 	if per != len(date) {
-		log.Error().Err(fmt.Errorf("日期列不符"))
+		log.Error().Err(fmt.Errorf("日期列不符:%s,%s", name, code))
 		return nil, fmt.Errorf("日期列不符")
 	}
 	ans := make([]items.Profile, per)
@@ -271,20 +300,28 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 		case "一、营业总收入":
 			for j := 0; j < per; j++ {
 				// parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
+				if ss != "" {
+					parseInt, err := strconv.ParseFloat(ss, 64)
+					if err != nil {
+						log.Error().Err(err).Msg("strconv.ParseInt")
+					}
+					ans[j].OperateAllIncome = parseInt
 				}
-				ans[j].OperateAllIncome = parseInt
+				ans[j].OperateAllIncome = 0
 			}
 			i = i + per
 		case "营业收入":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
+				if ss != "" {
+					parseInt, err := strconv.ParseFloat(ss, 64)
+					if err != nil {
+						log.Error().Err(err).Msg("strconv.ParseInt")
+					}
+					ans[j].OperateIncome = parseInt
 				}
-				ans[j].OperateIncome = parseInt
+				ans[j].OperateIncome = 0
 			}
 			i = i + per
 		case "二、营业总成本":
@@ -357,9 +394,14 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 }
 
 func Period(res []string) int {
+	start := 0
+
 	for i := 0; i < len(res); i++ {
-		if res[i] == "一、营业总收入" || res[i] == "一、经营活动产生的现金流量" || res[i] == "流动资产" {
-			return i - 1
+		if res[i] == "报表日期" {
+			start = i
+		}
+		if res[i] == "一、营业总收入" || res[i] == "一、经营活动产生的现金流量" || res[i] == "流动资产" || res[i] == "资产" || res[i] == "一、营业收入" {
+			return i - start - 1
 		}
 	}
 	return len(res)
@@ -370,7 +412,7 @@ func ReportDate(res []string) []string {
 	for i := 0; i < len(res); i++ {
 		if res[i] == "报表日期" {
 			for j := i + 1; j < len(res); j++ {
-				if res[j] == "一、营业总收入" || res[j] == "一、经营活动产生的现金流量" || res[j] == "流动资产" {
+				if res[j] == "一、营业总收入" || res[j] == "一、经营活动产生的现金流量" || res[j] == "流动资产" || res[j] == "资产" || res[j] == "一、营业收入" {
 					return ans
 				}
 				ans = append(ans, res[j])
@@ -514,4 +556,46 @@ func parseBalance(name, code string, res []string) ([]items.Balance, error) {
 	}
 
 	return ans, nil
+}
+
+var (
+	re = regexp.MustCompile("[0-9]+")
+)
+
+// ParseStarkPrice 解析当前股价
+func (s *StarkSpider) ParseStarkPrice(reader io.Reader) {
+	body, err := ioutil.ReadAll(reader)
+	if err != nil {
+		log.Info().Msg("解析结果出错")
+		return
+	}
+	// 解析code
+
+	regexp.MustCompile("[0-9]+")
+
+	split := strings.Split(string(body), ",")
+	ti := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
+
+	if len(split) >= 4 {
+		codes := re.FindAllString(split[0], -1)
+
+		price, err := strconv.ParseFloat(split[3], 64)
+		if err == nil && len(codes) > 0 {
+			update := map[string]interface{}{
+				"stock_price": price,
+				"crawl_date":  ti.Unix(),
+			}
+			if strings.Contains(split[0], "sh") {
+				update["shsz"] = "sh"
+			} else if strings.Contains(split[0], "sz") {
+				update["shsz"] = "sz"
+			}
+
+			if err := s.create.UpdateNameCode(context.Background(), codes[0], update); err != nil {
+				log.Info().Err(err).Msgf("存储：%s 的股价出错", codes[0])
+			} else {
+				log.Info().Msgf("存储：%s 的股价成功:%s", codes[0], ti.String())
+			}
+		}
+	}
 }

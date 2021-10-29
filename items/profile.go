@@ -1,12 +1,20 @@
 package items
 
 type NameCode struct {
-	ID       int64
-	Name     string
-	Code     string `gorm:"uniqueIndex:uidex_code,priority:1"`
-	Profile  int64
-	CashFlow int64
-	Balance  int64
+	ID         int64
+	Name       string
+	Code       string `gorm:"uniqueIndex:uidex_code,priority:1"`
+	Profile    int64
+	CashFlow   int64
+	Balance    int64
+	StockPrice float64 // 当前股价
+	CrawlDate  int64
+	SHSZ       string `gorm:"column:shsz"`
+}
+
+type Industry struct {
+	Name string `gorm:"uniqueIndex:uidex_indeustry_code,priority:2"`
+	Code string `gorm:"uniqueIndex:uidex_indeustry_code,priority:1"`
 }
 
 // 利润表
@@ -23,7 +31,7 @@ type Profile struct {
 	SalesExpense     float64
 	ManageExpense    float64
 	FinancialExpense float64
-	DilutedEarn      float64
+	DilutedEarn      float64 // 每股收益
 }
 
 // 上海股票的代码爬取
@@ -38,8 +46,8 @@ type DataSH struct {
 type CashFlow struct {
 	ID              int64
 	Code            string `gorm:"uniqueIndex:uidex_cash,priority:1"`
-	Name            string `gorm:"uniqueIndex:uidex_cash,priority:2"`
-	ReportingPeriod string
+	Name            string
+	ReportingPeriod string `gorm:"uniqueIndex:uidex_cash,priority:2"`
 	SalesCash       float64
 	SumInFow        float64
 	BuyCash         float64
