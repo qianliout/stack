@@ -65,4 +65,5 @@ type Balance struct {
 	Stock           float64
 	ShortLoan       float64
 	LongLoan        float64
+	Capital         float64
 }

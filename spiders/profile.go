@@ -63,7 +63,7 @@ func (s *StarkSpider) Start() {
 		r.Headers.Set("authority", "money.finance.sina.com.cn")
 		r.Headers.Set("authority", "money.finance.sina.com.cn")
 		r.Headers.Set("accept", "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8")
-		r.Headers.Set("Cookie", "UOR=www.google.com,finance.sina.com.cn,; SINAGLOBAL=101.206.250.69_1606034230.695058; U_TRS1=00000000.5f3ccf7.5fba2341.a0a53296; UM_distinctid=179ea4edb87329-0f1204ed8e9d55-1f3b6254-13c680-179ea4edb88403; __gads=ID=eb2fd0309922d2cf-2262930549c90069:T=1623133708:RT=1623133708:S=ALNI_MZAaX1lyVKcp3US2kTz_5qbQ6cJ_g; SR_SEL=1_511; Apache=175.153.169.31_1633142510.512058; ULV=1633221962423:6:2:1:175.153.169.31_1633142510.512058:1633142504369; MONEY-FINANCE-SINA-COM-CN-WEB5=; U_TRS2=000000fd.b043596a.615ec6f9.0869238b; FIN_ALL_VISITED=sh600113%2Csh601919%2Csh600905%2Csh600141%2Csh603155%2Csz000723%2Csz002756; rotatecount=2; FINA_V_S_2=sh600113,sh601919,sh600905,sh600141,sh603155,sz000723,sz002756; _s_upa=44")
+		r.Headers.Set("Cookie", "name=sinaAds; post=massage; page=23333; NowDate=Sat Oct 30 2021 11:42:10 GMT+0800 (ä¸­å›½æ ‡å‡†æ—¶é—´); UOR=www.google.com,finance.sina.com.cn,; SINAGLOBAL=101.206.250.69_1606034230.695058; U_TRS1=00000000.5f3ccf7.5fba2341.a0a53296; kke_CnLv1_PPT_v2=know; UM_distinctid=179ea4edb87329-0f1204ed8e9d55-1f3b6254-13c680-179ea4edb88403; __gads=ID=eb2fd0309922d2cf-2262930549c90069:T=1623133708:RT=1623133708:S=ALNI_MZAaX1lyVKcp3US2kTz_5qbQ6cJ_g; SR_SEL=1_511; Apache=182.150.57.253_1635498661.533198; ULV=1635498802120:12:12:4:182.150.57.253_1635498661.533198:1635498661440; _s_upa=3; U_TRS2=000000fd.9066544.617bbf44.a46a46b3; FIN_ALL_VISITED=sh603155%2Csz002932%2Csz300459%2Csz002171%2Csz002756%2Csz002240; rotatecount=2; FINA_V_S_2=sh603155,sz002932,sz300459,sz002171,sz002756,sz002240; display=hidden; sinaH5EtagStatus=y")
 	})
 
 	c.OnResponse(func(resp *colly.Response) {
@@ -132,6 +132,7 @@ func (s *StarkSpider) Start() {
 					log.Error().Err(err).Msgf("Visit：%s", proUrl)
 				}
 			}
+
 			if codes[i].CashFlow == 0 {
 				cashUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_CashFlow/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
 				if err := c.Visit(cashUrl); err != nil {
@@ -308,7 +309,6 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 					}
 					ans[j].OperateAllIncome = parseInt
 				}
-				ans[j].OperateAllIncome = 0
 			}
 			i = i + per
 		case "营业收入":
@@ -321,7 +321,6 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 					}
 					ans[j].OperateIncome = parseInt
 				}
-				ans[j].OperateIncome = 0
 			}
 			i = i + per
 		case "二、营业总成本":
@@ -551,6 +550,15 @@ func parseBalance(name, code string, res []string) ([]items.Balance, error) {
 				ans[j].LongLoan = parseInt
 			}
 			i = i + per
+
+		case "实收资本(或股本)", "股本", "实收资本":
+			for j := 0; j < per; j++ {
+				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
+				if err != nil {
+					log.Error().Err(err).Msg("strconv.ParseInt")
+				}
+				ans[j].Capital = parseInt
+			}
 		}
 		i = i + 1
 	}
