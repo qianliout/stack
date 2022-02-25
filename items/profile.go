@@ -61,10 +61,10 @@ type Balance struct {
 	Name            string
 	Code            string `gorm:"uniqueIndex:uidex_balance,priority:1"`
 	ReportingPeriod string `gorm:"uniqueIndex:uidex_balance,priority:2"`
-	MoneyFunds      float64
-	TransFinance    float64
-	Stock           float64
-	ShortLoan       float64
-	LongLoan        float64
-	Capital         float64
+	MoneyFunds      int64
+	TransFinance    int64
+	Stock           int64
+	ShortLoan       int64
+	LongLoan        int64
+	Capital         int64
 }

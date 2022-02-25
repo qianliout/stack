@@ -30,3 +30,20 @@ create table profiles
     diluted_earn       float,
     unique key ` idx_code ` (` code `, ` reporting_period `)
 );
+
+create table balances
+(
+    id               bigint not null auto_increment primary key,
+    name             varchar(20),
+    code             varchar(10),
+    reporting_period varchar(50),
+    money_funds      bigint,
+    trans_finance    bigint,
+    stock            bigint,
+    short_loan       bigint,
+    long_loan        bigint,
+    capital          bigint,
+    unique key ` idx_code ` (` code `, ` reporting_period `)
+);
+
+

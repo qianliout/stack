@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f1c66e14-251c-422b-b5a8-32014642d630" name="Default Changelist" comment="加上股本的爬取">
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+    <list default="true" id="f1c66e14-251c-422b-b5a8-32014642d630" name="Default Changelist" comment="加上研发费用的爬取">
       <change beforePath="$PROJECT_DIR$/items/profile.go" beforeDir="false" afterPath="$PROJECT_DIR$/items/profile.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipline/pipline.go" beforeDir="false" afterPath="$PROJECT_DIR$/pipline/pipline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipline/create.sql" beforeDir="false" afterPath="$PROJECT_DIR$/pipline/create.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spiders/profile.go" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/profile.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -187,7 +184,7 @@
       <workItem from="1638602988398" duration="839000" />
       <workItem from="1639269913022" duration="536000" />
       <workItem from="1645686436325" duration="315000" />
-      <workItem from="1645688429076" duration="6879000" />
+      <workItem from="1645688429076" duration="11058000" />
     </task>
     <task id="LOCAL-00001" summary="基本完成">
       <created>1633601180568</created>
@@ -226,7 +223,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="基本完成" />
     <MESSAGE value="加上股本的爬取" />
-    <option name="LAST_COMMIT_MESSAGE" value="加上股本的爬取" />
+    <MESSAGE value="加上研发费用的爬取" />
+    <option name="LAST_COMMIT_MESSAGE" value="加上研发费用的爬取" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>

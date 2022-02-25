@@ -87,13 +87,13 @@ func (s *StarkSpider) Start() {
 				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseProfile)
 			}
 
-			// if strings.Contains(url, "vFD_CashFlow") {
-			// 	htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
-			// }
+			if strings.Contains(url, "vFD_CashFlow") {
+				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
+			}
 
-			// if strings.Contains(url, "vFD_BalanceSheet") {
-			// 	htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
-			// }
+			if strings.Contains(url, "vFD_BalanceSheet") {
+				htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
+			}
 		}
 
 	})
@@ -126,12 +126,12 @@ func (s *StarkSpider) Start() {
 	years := []string{"2021", "2020"}
 	for i := range codes {
 		for j := range years {
-			if codes[i].Profile == 0 {
-				proUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_ProfitStatement/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
-				if err := c.Visit(proUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit：%s", proUrl)
-				}
-			}
+			// if codes[i].Profile == 0 {
+			// 	proUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_ProfitStatement/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
+			// 	if err := c.Visit(proUrl); err != nil {
+			// 		log.Error().Err(err).Msgf("Visit：%s", proUrl)
+			// 	}
+			// }
 
 			// if codes[i].CashFlow == 0 {
 			// 	cashUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_CashFlow/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
@@ -140,12 +140,12 @@ func (s *StarkSpider) Start() {
 			// 	}
 			// }
 			//
-			// if codes[i].Balance == 0 {
-			// 	balanceUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_BalanceSheet/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
-			// 	if err := c.Visit(balanceUrl); err != nil {
-			// 		log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
-			// 	}
-			// }
+			if codes[i].Balance == 0 {
+				balanceUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_BalanceSheet/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
+				if err := c.Visit(balanceUrl); err != nil {
+					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+				}
+			}
 		}
 
 		// ti := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
@@ -304,7 +304,7 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
 				if ss != "" {
 					if parseInt, err := strconv.ParseFloat(ss, 64); err == nil {
-						ans[j].OperateAllIncome = int64(parseInt * 10000)
+						ans[j].OperateAllIncome = int64(parseInt)
 					}
 				}
 			}
@@ -314,7 +314,7 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
 				if ss != "" {
 					if parseInt, err := strconv.ParseFloat(ss, 64); err == nil {
-						ans[j].OperateIncome = int64(parseInt * 10000)
+						ans[j].OperateIncome = int64(parseInt)
 					}
 				}
 			}
@@ -322,49 +322,49 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 		case "二、营业总成本":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].OperateAllCost = int64(parseInt * 10000)
+					ans[j].OperateAllCost = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "营业成本":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].OperateCost = int64(parseInt * 10000)
+					ans[j].OperateCost = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "营业税金及附加":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].Tax = int64(parseInt * 10000)
+					ans[j].Tax = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "销售费用":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].SalesExpense = int64(parseInt * 10000)
+					ans[j].SalesExpense = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "管理费用":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].ManageExpense = int64(parseInt * 10000)
+					ans[j].ManageExpense = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "财务费用":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].FinancialExpense = int64(parseInt * 10000)
+					ans[j].FinancialExpense = int64(parseInt)
 				}
 			}
 			i = i + per
 		case "研发费用":
 			for j := 0; j < per; j++ {
 				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
-					ans[j].RDExpense = int64(parseInt * 10000)
+					ans[j].RDExpense = int64(parseInt)
 				}
 			}
 			i = i + per
@@ -498,57 +498,45 @@ func parseBalance(name, code string, res []string) ([]items.Balance, error) {
 		switch res[i] {
 		case "货币资金":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].MoneyFunds = int64(parseInt)
 				}
-				ans[j].MoneyFunds = parseInt
 			}
 			i = i + per
 		case "交易性金融资产":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].TransFinance = int64(parseInt)
 				}
-				ans[j].TransFinance = parseInt
 			}
 			i = i + per
 		case "存货":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].Stock = int64(parseInt)
 				}
-				ans[j].Stock = parseInt
 			}
 			i = i + per
 		case "短期借款":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].ShortLoan = int64(parseInt)
 				}
-				ans[j].ShortLoan = parseInt
 			}
 			i = i + per
 		case "长期借款":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].LongLoan = int64(parseInt)
 				}
-				ans[j].LongLoan = parseInt
 			}
 			i = i + per
 
 		case "实收资本(或股本)", "股本", "实收资本":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].Capital = int64(parseInt)
 				}
-				ans[j].Capital = parseInt
 			}
 		}
 		i = i + 1
