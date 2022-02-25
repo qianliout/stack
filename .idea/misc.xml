@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CheckStyle-IDEA">
+    <option name="configuration">
+      <map>
+        <entry key="checkstyle-version" value="8.36" />
+        <entry key="copy-libs" value="false" />
+        <entry key="location-0" value="BUNDLED:(bundled):Sun Checks" />
+        <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
+        <entry key="scan-before-checkin" value="false" />
+        <entry key="scanscope" value="AllSources" />
+        <entry key="suppress-errors" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.9.7 (sftp://root@192.168.199.104:22/root/anaconda3/envs/stack/bin/python3.9)" project-jdk-type="Python SDK" />
+</project>

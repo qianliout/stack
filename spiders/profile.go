@@ -87,13 +87,13 @@ func (s *StarkSpider) Start() {
 				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseProfile)
 			}
 
-			if strings.Contains(url, "vFD_CashFlow") {
-				htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
-			}
+			// if strings.Contains(url, "vFD_CashFlow") {
+			// 	htmlDoc.Find(`#ProfitStatementNewTable0`).Each(s.ParseCash)
+			// }
 
-			if strings.Contains(url, "vFD_BalanceSheet") {
-				htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
-			}
+			// if strings.Contains(url, "vFD_BalanceSheet") {
+			// 	htmlDoc.Find(`#BalanceSheetNewTable0`).Each(s.ParseBalance)
+			// }
 		}
 
 	})
@@ -123,7 +123,7 @@ func (s *StarkSpider) Start() {
 		log.Error().Err(err).Msg("find name and code")
 		return
 	}
-	years := []string{"2021"}
+	years := []string{"2021", "2020"}
 	for i := range codes {
 		for j := range years {
 			if codes[i].Profile == 0 {
@@ -133,40 +133,40 @@ func (s *StarkSpider) Start() {
 				}
 			}
 
-			if codes[i].CashFlow == 0 {
-				cashUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_CashFlow/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
-				if err := c.Visit(cashUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit: %s", cashUrl)
-				}
-			}
-
-			if codes[i].Balance == 0 {
-				balanceUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_BalanceSheet/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
-				if err := c.Visit(balanceUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
-				}
-			}
+			// if codes[i].CashFlow == 0 {
+			// 	cashUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_CashFlow/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
+			// 	if err := c.Visit(cashUrl); err != nil {
+			// 		log.Error().Err(err).Msgf("Visit: %s", cashUrl)
+			// 	}
+			// }
+			//
+			// if codes[i].Balance == 0 {
+			// 	balanceUrl := fmt.Sprintf("https://money.finance.sina.com.cn/corp/go.php/vFD_BalanceSheet/stockid/%s/ctrl/%s/displaytype/4.phtml", codes[i].Code, years[j])
+			// 	if err := c.Visit(balanceUrl); err != nil {
+			// 		log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+			// 	}
+			// }
 		}
 
-		ti := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
-		if codes[i].CrawlDate < ti.Unix() && len(codes[i].Code) > 0 && string([]rune(codes[i].Code)[:1]) != "3" {
-			if codes[i].SHSZ != "" {
-				balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=%s%s", codes[i].SHSZ, codes[i].Code)
-				if err := c.Visit(balanceUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
-				}
-			} else {
-				balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=sh%s", codes[i].Code)
-				if err := c.Visit(balanceUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
-				}
-
-				balanceUrl = fmt.Sprintf("https://hq.sinajs.cn/list=sz%s", codes[i].Code)
-				if err := c.Visit(balanceUrl); err != nil {
-					log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
-				}
-			}
-		}
+		// ti := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
+		// if codes[i].CrawlDate < ti.Unix() && len(codes[i].Code) > 0 && string([]rune(codes[i].Code)[:1]) != "3" {
+		// 	if codes[i].SHSZ != "" {
+		// 		balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=%s%s", codes[i].SHSZ, codes[i].Code)
+		// 		if err := c.Visit(balanceUrl); err != nil {
+		// 			log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+		// 		}
+		// 	} else {
+		// 		balanceUrl := fmt.Sprintf("https://hq.sinajs.cn/list=sh%s", codes[i].Code)
+		// 		if err := c.Visit(balanceUrl); err != nil {
+		// 			log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+		// 		}
+		//
+		// 		balanceUrl = fmt.Sprintf("https://hq.sinajs.cn/list=sz%s", codes[i].Code)
+		// 		if err := c.Visit(balanceUrl); err != nil {
+		// 			log.Error().Err(err).Msgf("Visit:%s", balanceUrl)
+		// 		}
+		// 	}
+		// }
 	}
 
 }
@@ -303,11 +303,9 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 				// parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
 				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
 				if ss != "" {
-					parseInt, err := strconv.ParseFloat(ss, 64)
-					if err != nil {
-						log.Error().Err(err).Msg("strconv.ParseInt")
+					if parseInt, err := strconv.ParseFloat(ss, 64); err == nil {
+						ans[j].OperateAllIncome = int64(parseInt * 10000)
 					}
-					ans[j].OperateAllIncome = parseInt
 				}
 			}
 			i = i + per
@@ -315,66 +313,59 @@ func parseProfile(name, code string, res []string) ([]items.Profile, error) {
 			for j := 0; j < per; j++ {
 				ss := strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1)
 				if ss != "" {
-					parseInt, err := strconv.ParseFloat(ss, 64)
-					if err != nil {
-						log.Error().Err(err).Msg("strconv.ParseInt")
+					if parseInt, err := strconv.ParseFloat(ss, 64); err == nil {
+						ans[j].OperateIncome = int64(parseInt * 10000)
 					}
-					ans[j].OperateIncome = parseInt
 				}
 			}
 			i = i + per
 		case "二、营业总成本":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].OperateAllCost = int64(parseInt * 10000)
 				}
-				ans[j].OperateAllCost = parseInt
 			}
 			i = i + per
 		case "营业成本":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].OperateCost = int64(parseInt * 10000)
 				}
-				ans[j].OperateCost = parseInt
 			}
 			i = i + per
 		case "营业税金及附加":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].Tax = int64(parseInt * 10000)
 				}
-				ans[j].Tax = parseInt
 			}
 			i = i + per
 		case "销售费用":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].SalesExpense = int64(parseInt * 10000)
 				}
-				ans[j].SalesExpense = parseInt
 			}
 			i = i + per
 		case "管理费用":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].ManageExpense = int64(parseInt * 10000)
 				}
-				ans[j].ManageExpense = parseInt
 			}
 			i = i + per
 		case "财务费用":
 			for j := 0; j < per; j++ {
-				parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64)
-				if err != nil {
-					log.Error().Err(err).Msg("strconv.ParseInt")
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].FinancialExpense = int64(parseInt * 10000)
 				}
-				ans[j].FinancialExpense = parseInt
+			}
+			i = i + per
+		case "研发费用":
+			for j := 0; j < per; j++ {
+				if parseInt, err := strconv.ParseFloat(strings.Replace(strings.Replace(res[i+j+1], ",", "", -1), "-", "", -1), 64); err == nil {
+					ans[j].RDExpense = int64(parseInt * 10000)
+				}
 			}
 			i = i + per
 		case "稀释每股收益(元/股)":
@@ -602,7 +593,7 @@ func (s *StarkSpider) ParseStarkPrice(reader io.Reader) {
 			if err := s.create.UpdateNameCode(context.Background(), codes[0], update); err != nil {
 				log.Info().Err(err).Msgf("存储：%s 的股价出错", codes[0])
 			} else {
-				log.Info().Msgf("存储：%s 的股价成功:%s", codes[0], ti.String())
+				log.Info().Msgf("存储：%s 的股价成功:%s:%d", codes[0], ti.String(), price)
 			}
 		}
 	}

@@ -5,12 +5,12 @@ import (
 	"outback/stack/spiders"
 
 	"github.com/rs/zerolog/log"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func main() {
-	db, err := gorm.Open(postgres.Open("postgres://postgres:postgres@192.168.199.104:5432/postgres"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open("root:root@tcp(127.0.0.1:3306)/stack?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
 	if err != nil {
 		log.Error().Err(err)
 		return

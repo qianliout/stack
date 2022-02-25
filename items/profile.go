@@ -23,14 +23,15 @@ type Profile struct {
 	Name             string
 	Code             string `gorm:"uniqueIndex:uidex_profile,priority:1"`
 	ReportingPeriod  string `gorm:"uniqueIndex:uidex_profile,priority:2"`
-	OperateAllIncome float64
-	OperateIncome    float64
-	OperateAllCost   float64
-	OperateCost      float64
-	Tax              float64
-	SalesExpense     float64
-	ManageExpense    float64
-	FinancialExpense float64
+	OperateAllIncome int64
+	OperateIncome    int64
+	OperateAllCost   int64
+	OperateCost      int64
+	Tax              int64
+	SalesExpense     int64
+	ManageExpense    int64
+	RDExpense        int64 `json:"column:rd_expense" json:"rd_expenses"`
+	FinancialExpense int64
 	DilutedEarn      float64 // 每股收益
 }
 

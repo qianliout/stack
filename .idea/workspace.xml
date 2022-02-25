@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f1c66e14-251c-422b-b5a8-32014642d630" name="Default Changelist" comment="加上股本的爬取">
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/items/profile.go" beforeDir="false" afterPath="$PROJECT_DIR$/items/profile.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipline/pipline.go" beforeDir="false" afterPath="$PROJECT_DIR$/pipline/pipline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/profile.go" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/profile.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/gocolly/colly@v1.2.0/response.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/gocolly/colly@v1.2.0/colly.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/rs/zerolog@v1.25.0/log/log.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/!puerkito!bio/goquery@v1.7.1/property.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/!puerkito!bio/goquery@v1.7.1/traversal.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../pkg/mod/github.com/!puerkito!bio/goquery@v1.7.1/iteration.go" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="KubernetesApiPersistence">
+    <option name="context" value="docker-desktop" />
+    <option name="namespace" value="default" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="$MAVEN_REPOSITORY$" />
+        <option name="mavenHome" value="$USER_HOME$/environment/apache-maven-3.6.2" />
+        <option name="userSettingsFile" value="$USER_HOME$/environment/apache-maven-3.6.2/conf/settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="1.8" />
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1yyPBgWE1ZGOz7fTY4VdX1OMqcA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="abbreviatePackageNames" value="true" />
+    <option name="autoscrollFromSource" value="true" />
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="credentialsType com.jetbrains.python.remote.PyCreateRemoteInterpreterDialog$PyCreateRemoteSdkForm" value="Web Deployment" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="问题" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="sshConsole" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/spiders" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build outback/stack">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="go build outback/stack" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="stack" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="outback/stack" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build profile.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
+      <module name="stack" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="outback/stack" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/spiders/profile.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build outback/stack" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SshConsoleOptionsProvider">
+    <option name="myEncoding" value="UTF-8" />
+    <option name="myConnectionType" value="NONE" />
+    <option name="myConnectionId" value="" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>$USER_HOME$/.subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f1c66e14-251c-422b-b5a8-32014642d630" name="Default Changelist" comment="" />
+      <created>1633220720608</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1633220720608</updated>
+      <workItem from="1633220721958" duration="3660000" />
+      <workItem from="1633240281972" duration="440000" />
+      <workItem from="1633240739685" duration="513000" />
+      <workItem from="1633242232278" duration="362000" />
+      <workItem from="1633243387205" duration="34000" />
+      <workItem from="1633488677827" duration="11069000" />
+      <workItem from="1633514979267" duration="13491000" />
+      <workItem from="1633657149086" duration="459000" />
+      <workItem from="1633662373868" duration="3105000" />
+      <workItem from="1633764818135" duration="92000" />
+      <workItem from="1633787703008" duration="1546000" />
+      <workItem from="1633826477955" duration="3810000" />
+      <workItem from="1633837520254" duration="443000" />
+      <workItem from="1634447397561" duration="1269000" />
+      <workItem from="1635410138155" duration="381000" />
+      <workItem from="1635494390567" duration="7849000" />
+      <workItem from="1635563003822" duration="278000" />
+      <workItem from="1635565436022" duration="614000" />
+      <workItem from="1635747398315" duration="110000" />
+      <workItem from="1635817354508" duration="281000" />
+      <workItem from="1635846706436" duration="995000" />
+      <workItem from="1635990935225" duration="170000" />
+      <workItem from="1636010252406" duration="97000" />
+      <workItem from="1636098639567" duration="802000" />
+      <workItem from="1636100240019" duration="1805000" />
+      <workItem from="1636878552291" duration="1482000" />
+      <workItem from="1636960685870" duration="978000" />
+      <workItem from="1636984098566" duration="729000" />
+      <workItem from="1637398518000" duration="959000" />
+      <workItem from="1638602988398" duration="839000" />
+      <workItem from="1639269913022" duration="536000" />
+      <workItem from="1645686436325" duration="315000" />
+      <workItem from="1645688429076" duration="6879000" />
+    </task>
+    <task id="LOCAL-00001" summary="基本完成">
+      <created>1633601180568</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1633601180568</updated>
+    </task>
+    <task id="LOCAL-00002" summary="基本完成">
+      <created>1633658249209</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1633658249209</updated>
+    </task>
+    <task id="LOCAL-00003" summary="基本完成">
+      <created>1635505292346</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1635505292346</updated>
+    </task>
+    <task id="LOCAL-00004" summary="加上股本的爬取">
+      <created>1636879837205</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1636879837205</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="基本完成" />
+    <MESSAGE value="加上股本的爬取" />
+    <option name="LAST_COMMIT_MESSAGE" value="加上股本的爬取" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <environment>
+      <map>
+        <entry key="GOPROXY" value="https://goproxy.cn" />
+      </map>
+    </environment>
+    <proxy>https://goproxy.cn</proxy>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/spiders/profile.go</url>
+          <line>165</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/spiders/profile.go</url>
+          <line>109</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
